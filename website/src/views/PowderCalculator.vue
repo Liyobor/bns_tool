@@ -1,8 +1,8 @@
 <template>
-  <div style="text-align: center; margin-bottom: 20px;">
-      <router-link to="/">回到目錄</router-link>
-  </div>
   <div id="powder_cal">
+    <div style="text-align: center; margin-bottom: 20px;">
+      <router-link to="/">回到目錄</router-link>
+    </div>
     <div class="calculators-container">
         <div class="price-table">
             <h2>精氣價格</h2>
