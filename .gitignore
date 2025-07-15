@@ -1,0 +1,27 @@
+# Dependencies
+/node_modules
+/website/node_modules
+
+# Vite build output
+/website/dist
+
+# Vite cache
+/website/.vite
+
+# Temporary files
+/website/website_temp/
+
+# Environment variables
+.env
+*.env
+/SLA_one/.env
+
+# IDE directories
+.vscode/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Project Folders
+/SLA_one/
