@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>第二個計算器</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="powder_cal">
+    <div style="margin-bottom: 20px;">
+        <a href="main.html">回到目錄</a>
+    </div>
+
+    <div class="calculators-container">
+        <div class="price-table">
+            <h2>精氣價格</h2>
+            <div class="input-group">
+                <label for="desertQiPrice">大漠精氣價格：</label>
+                <input type="number" id="desertQiPrice" v-model.number="desertQiPrice">
+            </div>
+            <p>破碎結晶價格：{{ desertPowderPrice }}</p>
+    
+            <div class="input-group">
+                <label for="moonwaterQiPrice">水月精氣價格：</label>
+                <input type="number" id="moonwaterQiPrice" v-model.number="moonwaterQiPrice">
+            </div>
+            <p>破碎結晶價格：{{ moonwaterPowderPrice }}</p>
+        </div>
+    
+        <div class="price-table profit-table">
+            <h2>製作收益</h2>
+            <div class="input-group">
+                <label for="powderPriceForProfit">粉末價格(結晶x3)：</label>
+                <input type="number" id="powderPriceForProfit" v-model.number="powderPriceForProfit">
+            </div>
+            <div class="input-group bottom-rate">
+                <label for="goldToCrystalRate">1金幣 = </label>
+                <input type="number" id="goldToCrystalRate" v-model.number="goldToCrystalRate">
+                神石
+            </div>
+            <div class="profit-sub-block">
+                <h3>緊急修理工具</h3>
+                <div class="input-group">
+                    <label for="sellingPrice1">售價(單價)：</label>
+                    <input type="number" id="sellingPrice1" v-model.number="sellingPrice1"> 神石
+                </div>
+                <p>收益 : {{ dummyProfit1 }} 神石 / 50粉末</p>
+            </div>
+            <div class="profit-sub-block">
+                <h3>印章箱</h3>
+                <div class="input-group">
+                    <label for="sellingPrice2">售價(單價)：</label>
+                    <input type="number" id="sellingPrice2" v-model.number="sellingPrice2"> 神石
+                </div>
+                <p>收益 : {{ dummyProfit2 }} 神石 / 50粉末</p>
+            </div>
+            <div class="profit-sub-block">
+                <h3>封印符包</h3>
+                <div class="input-group">
+                    <label for="sellingPrice3">售價(單價)：</label>
+                    <input type="number" id="sellingPrice3" v-model.number="sellingPrice3"> 神石
+                </div>
+                <p>收益 : {{ dummyProfit3 }} 神石 / 50粉末</p>
+            </div>
+        </div>
+    </div>
+
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+  <script src="powder_cal.js"></script>
+</body>
+</html>

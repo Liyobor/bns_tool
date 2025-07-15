@@ -1,0 +1,173 @@
+.calculator-links {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.calculator-link {
+    margin: 10px 0;
+    padding: 15px 30px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-decoration: none;
+    color: #333;
+    font-size: 1.2em;
+    transition: background-color 0.3s;
+}
+
+.calculator-link:hover {
+    background-color: #f0f0f0;
+}
+
+.profit-sub-block h3 {
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+
+.profit-sub-block .input-group {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 5px;
+}
+
+.profit-sub-block .input-group label {
+    margin-bottom: 0;
+}
+
+.profit-sub-block .input-group input[type="number"] {
+    width: 80px; /* 調整輸入框寬度 */
+    flex-grow: 0;
+}
+
+.profit-sub-block p {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.profit-sub-block {
+    border: 1px solid #eee;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.profit-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.profit-item p {
+    margin: 0;
+    flex-shrink: 0;
+}
+
+.profit-item label {
+    margin-bottom: 0;
+    flex-shrink: 0;
+}
+
+.profit-item input[type="number"] {
+    width: 80px; /* 調整輸入框寬度 */
+    flex-grow: 1;
+}
+
+.profit-table {
+    width: 400px !important; /* 您可以根據需要調整這個數值 */
+}
+
+.calculators-container {
+    display: flex;
+    justify-content: flex-start; /* 改為 flex-start */
+    gap: 20px; /* 新增區塊間距 */
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+#app {
+max-width: 900px;
+margin: 0 auto;
+display: flex;
+flex-wrap: wrap;           /* ← 新增 */
+justify-content: space-around;
+}
+
+.price-table {
+width: 250px;
+border: 1px solid #ccc;
+padding: 10px;
+border-radius: 5px;
+}
+
+/* 原本的 input-group */
+.input-group {
+margin-bottom: 10px;
+}
+
+/* 新增底部那行的 class */
+.bottom-rate {
+flex: 0 0 100%;            /* 佔滿一整列，強制換行 */
+margin-top: 20px;          /* 原本的 padding-top 可改成 margin-top */
+}
+
+/* 其他樣式不變 */
+label {
+display: block;
+margin-bottom: 5px;
+}
+
+input[type="number"] {
+width: 100%;
+padding: 8px;
+border: 1px solid #ccc;
+border-radius: 4px;
+box-sizing: border-box;
+}
+
+button {
+background-color: #4CAF50;
+color: white;
+padding: 10px 20px;
+border: none;
+border-radius: 4px;
+cursor: pointer;
+}
+
+.result {
+margin-top: 20px;
+padding: 10px;
+border: 1px solid #ccc;
+border-radius: 4px;
+}
+
+.bottom-rate {
+    flex: 0 0 100%;    /* 這行保留，讓它跑到下一列 */
+    margin-top: 20px;
+  }
+  
+  /* 針對 bottom-rate 底下的 input 只佔內容所需寬度 */
+  .bottom-rate input[type="number"] {
+    width: 120px;      /* 或者你想要的固定寬度 */
+    display: inline-block;
+    box-sizing: border-box;
+  }
+  
+  /* 讓 label 跟輸入框在同一行 */
+  .bottom-rate label {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+  
+  /* 防止原本 input[type=number]{width:100%} 影響到底部這一行 */
+  .bottom-rate .input-group {
+    width: auto;       /* 取消原先 .input-group 繼承的寬度 */
+    display: inline-block;
+    vertical-align: middle;
+    margin-bottom: 0;  /* 如果不想要底下空隙，可以去掉 */
+  }
