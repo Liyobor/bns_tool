@@ -62,6 +62,18 @@
         <label for="monsterDefenseReduction">怪物防禦減傷比例 (%):</label>
         <input type="number" id="monsterDefenseReduction" v-model.number="monsterDefenseReduction">
     </div>
+
+    <div class="description-section">
+      <!-- <h3>計算公式與說明</h3> -->
+      <p><strong>適用等級:</strong> 55</p>
+      <ul>
+        <li><strong>暴擊率 (%):</strong> ((0.9785 * 100 * 數值) / (2509.9756 + 數值)) + 1</li>
+        <li><strong>暴擊傷害 (%):</strong> (((2.9262 * 數值) / (3371.1439 + 數值)) + 1.25) * 100</li>
+        <li><strong>命中率 (%):</strong> ((96.16 * 數值) / (820.5 + 數值)) / 100 + 0.85</li>
+        <li><strong>貫穿率 (%):</strong> (0.942 * 數值) / (3070.3849 + 數值) * 100</li>
+      </ul>
+      <p class="note">某些屬性會因為自身與怪物的等級差距而產生變化。</p>
+    </div>
   </div>
 </template>
 
@@ -69,22 +81,23 @@
 export default {
   name: 'StatsCalculator',
   data() {
+    const savedData = JSON.parse(localStorage.getItem('statsCalculatorData'));
     return {
-      currentStats: {
+      currentStats: savedData?.currentStats || {
         attackPower: 0,
         criticalRate: 0,
         criticalDamage: 0,
         accuracy: 0,
         piercing: 0
       },
-      expectedStats: {
+      expectedStats: savedData?.expectedStats || {
         attackPower: 0,
         criticalRate: 0,
         criticalDamage: 0,
         accuracy: 0,
         piercing: 0
       },
-      monsterDefenseReduction: 0
+      monsterDefenseReduction: savedData?.monsterDefenseReduction || 0
     }
   },
   computed: {
@@ -98,7 +111,28 @@ export default {
       }
     }
   },
+  watch: {
+    currentStats: {
+      handler() { this.saveData(); },
+      deep: true
+    },
+    expectedStats: {
+      handler() { this.saveData(); },
+      deep: true
+    },
+    monsterDefenseReduction() {
+      this.saveData();
+    }
+  },
   methods: {
+    saveData() {
+      const data = {
+        currentStats: this.currentStats,
+        expectedStats: this.expectedStats,
+        monsterDefenseReduction: this.monsterDefenseReduction
+      };
+      localStorage.setItem('statsCalculatorData', JSON.stringify(data));
+    },
     calculateCriticalRate(points) {
       if (points <= 0) return 0;
       return ((0.9785 * 100 * points) / (2509.9756 + points)) + 1;
@@ -124,9 +158,6 @@ export default {
   margin: 10px auto;
   padding: 15px;
   max-width: 800px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .calculator-body {
@@ -134,6 +165,8 @@ export default {
   grid-template-columns: 1fr 1.5fr 1.5fr 1fr;
   gap: 8px 12px;
   align-items: center;
+  padding: 15px;
+  border-radius: 8px;
 }
 
 .grid-header {
@@ -187,5 +220,33 @@ input[type="number"] {
 
 h3 {
     margin: 0 0 10px 0;
+}
+
+.description-section {
+  margin-top: 20px;
+  padding: 15px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.description-section h3 {
+  margin-top: 0;
+  text-align: center;
+}
+
+.description-section ul {
+  padding-left: 20px;
+  list-style-type: disc;
+}
+
+.description-section li {
+  margin-bottom: 8px;
+}
+
+.note {
+  margin-top: 15px;
+  font-size: 0.9em;
+  color: #777;
 }
 </style>
