@@ -4,6 +4,7 @@
     <div class="calculator-links">
       <router-link to="/mantra" class="calculator-link">真言珠試算</router-link>
       <router-link to="/powder" class="calculator-link">粉末試算</router-link>
+      <router-link to="/stats" class="calculator-link">屬性試算</router-link>
     </div>
   </div>
 </template>

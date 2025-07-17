@@ -19,6 +19,11 @@ const routes = [
     path: '/mantra',
     name: 'MantraCalculator',
     component: () => import(/* webpackChunkName: "mantra" */ '../views/MantraCalculator.vue')
+  },
+  {
+    path: '/stats',
+    name: 'StatsCalculator',
+    component: () => import(/* webpackChunkName: "stats" */ '../views/StatsCalculator.vue')
   }
 ]
 
