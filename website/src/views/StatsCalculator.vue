@@ -58,6 +58,11 @@
       <div class="grid-result"></div>
     </div>
 
+    <div class="damage-change-section">
+      <div class="grid-label">預期傷害變化</div>
+      <div class="grid-result-final">{{ damageChange.toFixed(2) }}%</div>
+    </div>
+
     <div class="extra-settings">
         <label for="monsterDefenseReduction">怪物防禦減傷比例 (%):</label>
         <input type="number" id="monsterDefenseReduction" v-model.number="monsterDefenseReduction">
@@ -109,6 +114,26 @@ export default {
         accuracy: this.calculateAccuracy(this.expectedStats.accuracy) - this.calculateAccuracy(this.currentStats.accuracy),
         piercing: this.calculatePiercing(this.expectedStats.piercing) - this.calculatePiercing(this.currentStats.piercing)
       }
+    },
+    damageChange() {
+      const currentCritRate = this.calculateCriticalRate(this.currentStats.criticalRate) / 100;
+      const currentCritDamage = this.calculateCriticalDamage(this.currentStats.criticalDamage) / 100;
+      const currentPiercing = this.calculatePiercing(this.currentStats.piercing) / 100;
+
+      const expectedCritRate = this.calculateCriticalRate(this.expectedStats.criticalRate) / 100;
+      const expectedCritDamage = this.calculateCriticalDamage(this.expectedStats.criticalDamage) / 100;
+      const expectedPiercing = this.calculatePiercing(this.expectedStats.piercing) / 100;
+
+      const monsterReduction = this.monsterDefenseReduction / 100;
+
+      const currentDamageMultiplier = (1 - currentCritRate + (currentCritRate * currentCritDamage)) * (1 - (monsterReduction * (1 - currentPiercing))) * this.currentStats.attackPower;
+      const expectedDamageMultiplier = (1 - expectedCritRate + (expectedCritRate * expectedCritDamage)) * (1 - (monsterReduction * (1 - expectedPiercing))) * this.expectedStats.attackPower;
+
+      if (currentDamageMultiplier === 0) {
+        return 0;
+      }
+
+      return ((expectedDamageMultiplier / currentDamageMultiplier) - 1) * 100;
     }
   },
   watch: {
@@ -192,6 +217,22 @@ export default {
 
 .grid-result-percent {
     color: #3a87ad;
+}
+
+.grid-result-final {
+  text-align: center;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.damage-change-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
 }
 
 input[type="number"] {
