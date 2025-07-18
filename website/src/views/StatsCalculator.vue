@@ -143,7 +143,7 @@ export default {
     },
     calculateAccuracy(points) {
       if (points <= 0) return 0;
-      return ((96.16 * points) / (820.5 + points)) / 100 + 0.85;
+      return (((96.16 * points) / (820.5 + points)) / 100 + 0.85) * 100;
     },
     calculatePiercing(points) {
       if (points <= 0) return 0;
