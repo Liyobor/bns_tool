@@ -278,15 +278,15 @@ export default {
       return ((expectedDamageMultiplier / currentDamageMultiplier) - 1) * 100;
     },
     calculateCriticalRate(points) {
-      if (points <= 0) return 0;
+      if (points <= 0) return 1;
       return ((0.9785 * 100 * points) / (2509.9756 + points)) + 1;
     },
     calculateCriticalDamage(points) {
-      if (points <= 0) return 0;
+      if (points <= 0) return 125;
       return (((2.9262 * points) / (3371.1439 + points)) + 1.25) * 100;
     },
     calculateAccuracy(points) {
-      if (points <= 0) return 0;
+      if (points <= 0) return 85;
       return (((96.16 * points) / (820.5 + points)) / 100 + 0.85) * 100;
     },
     calculatePiercing(points) {
