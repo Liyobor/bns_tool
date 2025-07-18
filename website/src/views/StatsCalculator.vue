@@ -4,54 +4,63 @@
       <router-link to="/">回到目錄</router-link>
     </div>
 
-    <div class="calculator-body">
-      <!-- Headers -->
-      <div class="grid-header"></div>
-      <div class="grid-header"><h3>目前屬性</h3></div>
-      <div class="grid-header"><h3>預期屬性</h3></div>
-      
+    <div class="main-content">
+      <div class="calculator-body">
+        <!-- Headers -->
+        <div class="grid-header"></div>
+        <div class="grid-header"><h3>目前屬性</h3></div>
+        <div class="grid-header"><h3>預期屬性</h3></div>
+        
 
-      <!-- Attack Power -->
-      <div class="grid-label">攻擊力</div>
-      <div><input type="number" v-model.number="currentStats.attackPower"></div>
-      <div><input type="number" v-model.number="expectedStats.attackPower"></div>
-      
+        <!-- Attack Power -->
+        <div class="grid-label">攻擊力</div>
+        <div><input type="number" v-model.number="currentStats.attackPower"></div>
+        <div><input type="number" v-model.number="expectedStats.attackPower"></div>
+        
 
-      <!-- Critical Rate -->
-      <div class="grid-label">暴擊</div>
-      <div><input type="number" v-model.number="currentStats.criticalRate"></div>
-      <div><input type="number" v-model.number="expectedStats.criticalRate"></div>
-      
-      <div class="grid-label-result"></div>
-      <div class="grid-result-percent">{{ calculateCriticalRate(currentStats.criticalRate).toFixed(2) }}%</div>
-      <div class="grid-result-percent">{{ calculateCriticalRate(expectedStats.criticalRate).toFixed(2) }}%</div>
+        <!-- Critical Rate -->
+        <div class="grid-label">暴擊</div>
+        <div><input type="number" v-model.number="currentStats.criticalRate"></div>
+        <div><input type="number" v-model.number="expectedStats.criticalRate"></div>
+        
+        <div class="grid-label-result"></div>
+        <div class="grid-result-percent">{{ calculateCriticalRate(currentStats.criticalRate).toFixed(2) }}%</div>
+        <div class="grid-result-percent">{{ calculateCriticalRate(expectedStats.criticalRate).toFixed(2) }}%</div>
 
-      <!-- Critical Damage -->
-      <div class="grid-label">暴擊傷害</div>
-      <div><input type="number" v-model.number="currentStats.criticalDamage"></div>
-      <div><input type="number" v-model.number="expectedStats.criticalDamage"></div>
-      
-      <div class="grid-label-result"></div>
-      <div class="grid-result-percent">{{ calculateCriticalDamage(currentStats.criticalDamage).toFixed(2) }}%</div>
-      <div class="grid-result-percent">{{ calculateCriticalDamage(expectedStats.criticalDamage).toFixed(2) }}%</div>
+        <!-- Critical Damage -->
+        <div class="grid-label">暴擊傷害</div>
+        <div><input type="number" v-model.number="currentStats.criticalDamage"></div>
+        <div><input type="number" v-model.number="expectedStats.criticalDamage"></div>
+        
+        <div class="grid-label-result"></div>
+        <div class="grid-result-percent">{{ calculateCriticalDamage(currentStats.criticalDamage).toFixed(2) }}%</div>
+        <div class="grid-result-percent">{{ calculateCriticalDamage(expectedStats.criticalDamage).toFixed(2) }}%</div>
 
-      <!-- Accuracy -->
-      <div class="grid-label">命中</div>
-      <div><input type="number" v-model.number="currentStats.accuracy"></div>
-      <div><input type="number" v-model.number="expectedStats.accuracy"></div>
-      
-      <div class="grid-label-result"></div>
-      <div class="grid-result-percent">{{ calculateAccuracy(currentStats.accuracy).toFixed(2) }}%</div>
-      <div class="grid-result-percent">{{ calculateAccuracy(expectedStats.accuracy).toFixed(2) }}%</div>
+        <!-- Accuracy -->
+        <div class="grid-label">命中</div>
+        <div><input type="number" v-model.number="currentStats.accuracy"></div>
+        <div><input type="number" v-model.number="expectedStats.accuracy"></div>
+        
+        <div class="grid-label-result"></div>
+        <div class="grid-result-percent">{{ calculateAccuracy(currentStats.accuracy).toFixed(2) }}%</div>
+        <div class="grid-result-percent">{{ calculateAccuracy(expectedStats.accuracy).toFixed(2) }}%</div>
 
-      <!-- Piercing -->
-      <div class="grid-label">貫穿</div>
-      <div><input type="number" v-model.number="currentStats.piercing"></div>
-      <div><input type="number" v-model.number="expectedStats.piercing"></div>
-      
-      <div class="grid-label-result"></div>
-      <div class="grid-result-percent">{{ calculatePiercing(currentStats.piercing).toFixed(2) }}%</div>
-      <div class="grid-result-percent">{{ calculatePiercing(expectedStats.piercing).toFixed(2) }}%</div>
+        <!-- Piercing -->
+        <div class="grid-label">貫穿</div>
+        <div><input type="number" v-model.number="currentStats.piercing"></div>
+        <div><input type="number" v-model.number="expectedStats.piercing"></div>
+        
+        <div class="grid-label-result"></div>
+        <div class="grid-result-percent">{{ calculatePiercing(currentStats.piercing).toFixed(2) }}%</div>
+        <div class="grid-result-percent">{{ calculatePiercing(expectedStats.piercing).toFixed(2) }}%</div>
+      </div>
+
+      <div class="extra-settings-container">
+        <div class="extra-settings">
+            <label for="monsterDefenseReduction">怪物防禦減傷比例 (%):</label>
+            <input type="number" id="monsterDefenseReduction" v-model.number="monsterDefenseReduction">
+        </div>
+      </div>
     </div>
 
     <div class="damage-change-section">
@@ -62,9 +71,16 @@
       此計算未考慮命中率。
     </div>
 
-    <div class="extra-settings">
-        <label for="monsterDefenseReduction">怪物防禦減傷比例 (%):</label>
-        <input type="number" id="monsterDefenseReduction" v-model.number="monsterDefenseReduction">
+    <div class="crit-increase-section">
+      <h4>基於當前屬性，暴擊提升會增加的傷害量</h4>
+      <div class="crit-increase-grid">
+        <div class="grid-label">+100 暴擊</div>
+        <div class="grid-result-final">{{ damageChangeCrit100.toFixed(2) }}%</div>
+        <div class="grid-label">+200 暴擊</div>
+        <div class="grid-result-final">{{ damageChangeCrit200.toFixed(2) }}%</div>
+        <div class="grid-label">+400 暴擊</div>
+        <div class="grid-result-final">{{ damageChangeCrit400.toFixed(2) }}%</div>
+      </div>
     </div>
 
     <div class="description-section">
@@ -125,6 +141,15 @@ export default {
       }
 
       return ((expectedDamageMultiplier / currentDamageMultiplier) - 1) * 100;
+    },
+    damageChangeCrit100() {
+      return this.calculateCritDamageIncrease(100);
+    },
+    damageChangeCrit200() {
+      return this.calculateCritDamageIncrease(200);
+    },
+    damageChangeCrit400() {
+      return this.calculateCritDamageIncrease(400);
     }
   },
   watch: {
@@ -148,6 +173,24 @@ export default {
         monsterDefenseReduction: this.monsterDefenseReduction
       };
       localStorage.setItem('statsCalculatorData', JSON.stringify(data));
+    },
+    calculateCritDamageIncrease(critToAdd) {
+      const currentCritRate = this.calculateCriticalRate(this.currentStats.criticalRate) / 100;
+      const currentCritDamage = this.calculateCriticalDamage(this.currentStats.criticalDamage) / 100;
+      const currentPiercing = this.calculatePiercing(this.currentStats.piercing) / 100;
+
+      const expectedCritRate = this.calculateCriticalRate(this.currentStats.criticalRate + critToAdd) / 100;
+      
+      const monsterReduction = this.monsterDefenseReduction / 100;
+
+      const currentDamageMultiplier = (1 - currentCritRate + (currentCritRate * currentCritDamage)) * (1 - (monsterReduction * (1 - currentPiercing)));
+      const expectedDamageMultiplier = (1 - expectedCritRate + (expectedCritRate * currentCritDamage)) * (1 - (monsterReduction * (1 - currentPiercing)));
+
+      if (currentDamageMultiplier === 0) {
+        return 0;
+      }
+      
+      return ((expectedDamageMultiplier / currentDamageMultiplier) - 1) * 100;
     },
     calculateCriticalRate(points) {
       if (points <= 0) return 0;
@@ -173,7 +216,13 @@ export default {
 .calculator-container {
   margin: 10px auto;
   padding: 15px;
-  max-width: 800px;
+  max-width: 1000px;
+}
+
+.main-content {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
 }
 
 .calculator-body {
@@ -183,6 +232,14 @@ export default {
   align-items: center;
   padding: 15px;
   border-radius: 8px;
+  flex-grow: 1;
+}
+
+.extra-settings-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 15px;
 }
 
 .grid-header {
@@ -236,14 +293,12 @@ input[type="number"] {
 }
 
 .extra-settings {
-  margin-top: 15px;
-  padding-top: 15px;
-  border-top: 1px solid #eee;
   text-align: center;
 }
 
 .extra-settings label {
-    margin-right: 10px;
+    display: block;
+    margin-bottom: 10px;
 }
 
 .extra-settings input {
@@ -280,5 +335,21 @@ h3 {
   margin-top: 15px;
   font-size: 0.9em;
   color: #777;
+}
+
+.crit-increase-section {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+  text-align: center;
+}
+
+.crit-increase-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 12px;
+  align-items: center;
+  max-width: 400px;
+  margin: 10px auto;
 }
 </style>
