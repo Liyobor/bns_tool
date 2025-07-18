@@ -9,58 +9,55 @@
       <div class="grid-header"></div>
       <div class="grid-header"><h3>目前屬性</h3></div>
       <div class="grid-header"><h3>預期屬性</h3></div>
-      <div class="grid-header"><h3>屬性差異</h3></div>
+      
 
       <!-- Attack Power -->
       <div class="grid-label">攻擊力</div>
       <div><input type="number" v-model.number="currentStats.attackPower"></div>
       <div><input type="number" v-model.number="expectedStats.attackPower"></div>
-      <div class="grid-result">{{ diffStats.attackPower }}</div>
+      
 
       <!-- Critical Rate -->
       <div class="grid-label">暴擊</div>
       <div><input type="number" v-model.number="currentStats.criticalRate"></div>
       <div><input type="number" v-model.number="expectedStats.criticalRate"></div>
-      <div class="grid-result">{{ diffStats.criticalRate.toFixed(2) }}%</div>
+      
       <div class="grid-label-result"></div>
       <div class="grid-result-percent">{{ calculateCriticalRate(currentStats.criticalRate).toFixed(2) }}%</div>
       <div class="grid-result-percent">{{ calculateCriticalRate(expectedStats.criticalRate).toFixed(2) }}%</div>
-      <div class="grid-result"></div>
 
       <!-- Critical Damage -->
       <div class="grid-label">暴擊傷害</div>
       <div><input type="number" v-model.number="currentStats.criticalDamage"></div>
       <div><input type="number" v-model.number="expectedStats.criticalDamage"></div>
-      <div class="grid-result">{{ diffStats.criticalDamage.toFixed(2) }}%</div>
+      
       <div class="grid-label-result"></div>
       <div class="grid-result-percent">{{ calculateCriticalDamage(currentStats.criticalDamage).toFixed(2) }}%</div>
       <div class="grid-result-percent">{{ calculateCriticalDamage(expectedStats.criticalDamage).toFixed(2) }}%</div>
-      <div class="grid-result"></div>
 
       <!-- Accuracy -->
       <div class="grid-label">命中</div>
       <div><input type="number" v-model.number="currentStats.accuracy"></div>
       <div><input type="number" v-model.number="expectedStats.accuracy"></div>
-      <div class="grid-result">{{ diffStats.accuracy.toFixed(2) }}%</div>
+      
       <div class="grid-label-result"></div>
       <div class="grid-result-percent">{{ calculateAccuracy(currentStats.accuracy).toFixed(2) }}%</div>
       <div class="grid-result-percent">{{ calculateAccuracy(expectedStats.accuracy).toFixed(2) }}%</div>
-      <div class="grid-result"></div>
 
       <!-- Piercing -->
       <div class="grid-label">貫穿</div>
       <div><input type="number" v-model.number="currentStats.piercing"></div>
       <div><input type="number" v-model.number="expectedStats.piercing"></div>
-      <div class="grid-result">{{ diffStats.piercing.toFixed(2) }}%</div>
+      
       <div class="grid-label-result"></div>
       <div class="grid-result-percent">{{ calculatePiercing(currentStats.piercing).toFixed(2) }}%</div>
       <div class="grid-result-percent">{{ calculatePiercing(expectedStats.piercing).toFixed(2) }}%</div>
-      <div class="grid-result"></div>
     </div>
 
     <div class="damage-change-section">
       <div class="grid-label">預期傷害變化</div>
       <div class="grid-result-final">{{ damageChange.toFixed(2) }}%</div>
+      
     </div>
 
     <div class="extra-settings">
@@ -106,15 +103,7 @@ export default {
     }
   },
   computed: {
-    diffStats() {
-      return {
-        attackPower: this.expectedStats.attackPower - this.currentStats.attackPower,
-        criticalRate: this.calculateCriticalRate(this.expectedStats.criticalRate) - this.calculateCriticalRate(this.currentStats.criticalRate),
-        criticalDamage: this.calculateCriticalDamage(this.expectedStats.criticalDamage) - this.calculateCriticalDamage(this.currentStats.criticalDamage),
-        accuracy: this.calculateAccuracy(this.expectedStats.accuracy) - this.calculateAccuracy(this.currentStats.accuracy),
-        piercing: this.calculatePiercing(this.expectedStats.piercing) - this.calculatePiercing(this.currentStats.piercing)
-      }
-    },
+    
     damageChange() {
       const currentCritRate = this.calculateCriticalRate(this.currentStats.criticalRate) / 100;
       const currentCritDamage = this.calculateCriticalDamage(this.currentStats.criticalDamage) / 100;
@@ -187,7 +176,7 @@ export default {
 
 .calculator-body {
   display: grid;
-  grid-template-columns: 1fr 1.5fr 1.5fr 1fr;
+  grid-template-columns: 1fr 1.5fr 1.5fr;
   gap: 8px 12px;
   align-items: center;
   padding: 15px;
