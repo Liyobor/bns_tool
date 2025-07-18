@@ -57,7 +57,9 @@
     <div class="damage-change-section">
       <div class="grid-label">預期傷害變化</div>
       <div class="grid-result-final">{{ damageChange.toFixed(2) }}%</div>
-      
+    </div>
+    <div class="note" style="text-align: center; margin-top: 10px;">
+      此計算未考慮命中率。
     </div>
 
     <div class="extra-settings">
