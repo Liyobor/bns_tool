@@ -1,0 +1,4 @@
+feat(StatsCalculator): Add critical strike damage increase calculation and adjust layout
+
+- Add a new section to calculate the damage increase for +100, +200, and +400 critical strike chance based on the user's current stats.
+- Move the 'Monster Defense Reduction' input field to the right of the 'Expected Stats' section for a more compact layout.

@@ -1,7 +1,13 @@
 <template>
   <div class="calculator-container">
+    
+
     <div style="text-align: center; margin-bottom: 15px;">
       <router-link to="/">回到目錄</router-link>
+    </div>
+
+    <div class="level-info">
+      <strong>適用等級:</strong> 55
     </div>
 
     <div class="main-content">
@@ -71,21 +77,46 @@
       此計算未考慮命中率。
     </div>
 
-    <div class="crit-increase-section">
-      <h4>基於當前屬性，暴擊提升會增加的傷害量</h4>
-      <div class="crit-increase-grid">
-        <div class="grid-label">+100 暴擊</div>
-        <div class="grid-result-final">{{ damageChangeCrit100.toFixed(2) }}%</div>
-        <div class="grid-label">+200 暴擊</div>
-        <div class="grid-result-final">{{ damageChangeCrit200.toFixed(2) }}%</div>
-        <div class="grid-label">+400 暴擊</div>
-        <div class="grid-result-final">{{ damageChangeCrit400.toFixed(2) }}%</div>
+    <div class="increase-sections-container">
+      <div class="crit-increase-section">
+        <h4>基於當前屬性，暴擊提升會增加的傷害量</h4>
+        <div class="crit-increase-grid">
+          <div class="grid-label">+100 暴擊</div>
+          <div class="grid-result-final">{{ damageChangeCrit100.toFixed(2) }}%</div>
+          <div class="grid-label">+200 暴擊</div>
+          <div class="grid-result-final">{{ damageChangeCrit200.toFixed(2) }}%</div>
+          <div class="grid-label">+400 暴擊</div>
+          <div class="grid-result-final">{{ damageChangeCrit400.toFixed(2) }}%</div>
+        </div>
+      </div>
+
+      <div class="crit-increase-section">
+        <h4>基於當前屬性，暴擊傷害提升會增加的傷害量</h4>
+        <div class="crit-increase-grid">
+          <div class="grid-label">+100 暴傷</div>
+          <div class="grid-result-final">{{ damageChangeCritDmg100.toFixed(2) }}%</div>
+          <div class="grid-label">+200 暴傷</div>
+          <div class="grid-result-final">{{ damageChangeCritDmg200.toFixed(2) }}%</div>
+          <div class="grid-label">+400 暴傷</div>
+          <div class="grid-result-final">{{ damageChangeCritDmg400.toFixed(2) }}%</div>
+        </div>
+      </div>
+
+      <div class="crit-increase-section">
+        <h4>基於當前屬性，貫穿提升會增加的傷害量</h4>
+        <div class="crit-increase-grid">
+          <div class="grid-label">+100 貫穿</div>
+          <div class="grid-result-final">{{ damageChangePiercing100.toFixed(2) }}%</div>
+          <div class="grid-label">+200 貫穿</div>
+          <div class="grid-result-final">{{ damageChangePiercing200.toFixed(2) }}%</div>
+          <div class="grid-label">+400 貫穿</div>
+          <div class="grid-result-final">{{ damageChangePiercing400.toFixed(2) }}%</div>
+        </div>
       </div>
     </div>
 
     <div class="description-section">
       <!-- <h3>計算公式與說明</h3> -->
-      <p><strong>適用等級:</strong> 55</p>
       <ul>
         <li><strong>暴擊率 (%):</strong> ((0.9785 * 100 * 數值) / (2509.9756 + 數值)) + 1</li>
         <li><strong>暴擊傷害 (%):</strong> (((2.9262 * 數值) / (3371.1439 + 數值)) + 1.25) * 100</li>
@@ -143,13 +174,31 @@ export default {
       return ((expectedDamageMultiplier / currentDamageMultiplier) - 1) * 100;
     },
     damageChangeCrit100() {
-      return this.calculateCritDamageIncrease(100);
+      return this.calculateCritIncrease(100);
     },
     damageChangeCrit200() {
-      return this.calculateCritDamageIncrease(200);
+      return this.calculateCritIncrease(200);
     },
     damageChangeCrit400() {
-      return this.calculateCritDamageIncrease(400);
+      return this.calculateCritIncrease(400);
+    },
+    damageChangeCritDmg100() {
+      return this.calculateCritDmgIncrease(100);
+    },
+    damageChangeCritDmg200() {
+      return this.calculateCritDmgIncrease(200);
+    },
+    damageChangeCritDmg400() {
+      return this.calculateCritDmgIncrease(400);
+    },
+    damageChangePiercing100() {
+      return this.calculatePiercingIncrease(100);
+    },
+    damageChangePiercing200() {
+      return this.calculatePiercingIncrease(200);
+    },
+    damageChangePiercing400() {
+      return this.calculatePiercingIncrease(400);
     }
   },
   watch: {
@@ -174,7 +223,7 @@ export default {
       };
       localStorage.setItem('statsCalculatorData', JSON.stringify(data));
     },
-    calculateCritDamageIncrease(critToAdd) {
+    calculateCritIncrease(critToAdd) {
       const currentCritRate = this.calculateCriticalRate(this.currentStats.criticalRate) / 100;
       const currentCritDamage = this.calculateCriticalDamage(this.currentStats.criticalDamage) / 100;
       const currentPiercing = this.calculatePiercing(this.currentStats.piercing) / 100;
@@ -185,6 +234,42 @@ export default {
 
       const currentDamageMultiplier = (1 - currentCritRate + (currentCritRate * currentCritDamage)) * (1 - (monsterReduction * (1 - currentPiercing)));
       const expectedDamageMultiplier = (1 - expectedCritRate + (expectedCritRate * currentCritDamage)) * (1 - (monsterReduction * (1 - currentPiercing)));
+
+      if (currentDamageMultiplier === 0) {
+        return 0;
+      }
+      
+      return ((expectedDamageMultiplier / currentDamageMultiplier) - 1) * 100;
+    },
+    calculateCritDmgIncrease(critDmgToAdd) {
+      const currentCritRate = this.calculateCriticalRate(this.currentStats.criticalRate) / 100;
+      const currentCritDamage = this.calculateCriticalDamage(this.currentStats.criticalDamage) / 100;
+      const currentPiercing = this.calculatePiercing(this.currentStats.piercing) / 100;
+
+      const expectedCritDamage = this.calculateCriticalDamage(this.currentStats.criticalDamage + critDmgToAdd) / 100;
+      
+      const monsterReduction = this.monsterDefenseReduction / 100;
+
+      const currentDamageMultiplier = (1 - currentCritRate + (currentCritRate * currentCritDamage)) * (1 - (monsterReduction * (1 - currentPiercing)));
+      const expectedDamageMultiplier = (1 - currentCritRate + (currentCritRate * expectedCritDamage)) * (1 - (monsterReduction * (1 - currentPiercing)));
+
+      if (currentDamageMultiplier === 0) {
+        return 0;
+      }
+      
+      return ((expectedDamageMultiplier / currentDamageMultiplier) - 1) * 100;
+    },
+    calculatePiercingIncrease(piercingToAdd) {
+      const currentCritRate = this.calculateCriticalRate(this.currentStats.criticalRate) / 100;
+      const currentCritDamage = this.calculateCriticalDamage(this.currentStats.criticalDamage) / 100;
+      const currentPiercing = this.calculatePiercing(this.currentStats.piercing) / 100;
+
+      const expectedPiercing = this.calculatePiercing(this.currentStats.piercing + piercingToAdd) / 100;
+      
+      const monsterReduction = this.monsterDefenseReduction / 100;
+
+      const currentDamageMultiplier = (1 - currentCritRate + (currentCritRate * currentCritDamage)) * (1 - (monsterReduction * (1 - currentPiercing)));
+      const expectedDamageMultiplier = (1 - currentCritRate + (currentCritRate * currentCritDamage)) * (1 - (monsterReduction * (1 - expectedPiercing)));
 
       if (currentDamageMultiplier === 0) {
         return 0;
@@ -216,7 +301,13 @@ export default {
 .calculator-container {
   margin: 10px auto;
   padding: 15px;
-  max-width: 1000px;
+  max-width: 1200px;
+}
+
+.level-info {
+  text-align: center;
+  font-size: 1.2em;
+  margin-bottom: 15px;
 }
 
 .main-content {
@@ -337,11 +428,22 @@ h3 {
   color: #777;
 }
 
-.crit-increase-section {
+.increase-sections-container {
+  display: flex;
+  justify-content: space-around;
   margin-top: 20px;
   padding-top: 20px;
   border-top: 1px solid #eee;
+}
+
+.crit-increase-section {
   text-align: center;
+  padding: 0 20px;
+  border-right: 2px solid #830000;
+}
+
+.crit-increase-section:last-child {
+  border-right: none;
 }
 
 .crit-increase-grid {
