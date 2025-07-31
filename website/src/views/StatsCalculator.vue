@@ -7,7 +7,7 @@
     </div>
 
     <div class="level-info">
-      <strong>適用等級:</strong> 55
+      <strong>適用等級:</strong> 60
     </div>
 
     <div class="main-content">
@@ -279,18 +279,31 @@ export default {
     },
     calculateCriticalRate(points) {
       if (points <= 0) return 1;
+      
+      // level 60
+      return ((0.9968 * 100 * points) / (8922.5043 + points)) + 1;
+      // level 55
       return ((0.9785 * 100 * points) / (2509.9756 + points)) + 1;
     },
     calculateCriticalDamage(points) {
       if (points <= 0) return 125;
+      // level 60
+      return (((2.8969 * points) / (8377.3824 + points)) + 1.25) * 100;
+      // level 55
       return (((2.9262 * points) / (3371.1439 + points)) + 1.25) * 100;
     },
     calculateAccuracy(points) {
       if (points <= 0) return 85;
+      // level 60
+      return (((95.5467 * points) / (6294.5977 + points)) / 100 + 0.85) * 100;
+      // level 55
       return (((96.16 * points) / (820.5 + points)) / 100 + 0.85) * 100;
     },
     calculatePiercing(points) {
       if (points <= 0) return 0;
+      // level 60
+      return (0.942788 * points) / (10665.5022 + points) * 100;
+      // level 55
       return (0.942 * points) / (3070.3849 + points) * 100;
     }
   }
