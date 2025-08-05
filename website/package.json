@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "npm run build && aws s3 sync dist/assets s3://bns-tool/assets --cache-control \"public, max-age=31536000, immutable\" --delete && aws s3 sync dist s3://bns-tool --exclude \"assets/*\" --cache-control \"no-cache, must-revalidate, max-age=0\" --delete && aws s3 cp dist/index.html s3://bns-tool/index.html --content-type text/html --cache-control \"no-cache, must-revalidate, max-age=0\" --metadata-directive REPLACE"
   },
   "dependencies": {
     "vue": "^3.2.47",
