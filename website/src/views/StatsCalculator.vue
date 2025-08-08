@@ -35,10 +35,10 @@
         <div class="grid-label-result"></div>
         <div class="grid-result-percent">{{ (calculateCriticalRate(currentStats.criticalRate) + (currentStats.additionalCriticalRate || 0)).toFixed(2) }}%</div>
         <div class="grid-result-percent">{{ (calculateCriticalRate(expectedStats.criticalRate) + (expectedStats.additionalCriticalRate || 0)).toFixed(2) }}%</div>
-        <div></div>
+        <div class="grid-result-percent">{{ (calculateCriticalRate(currentStats.criticalRate + additionalStats.criticalRate) + (currentStats.additionalCriticalRate || 0) + (additionalStats.additionalCriticalRate || 0)).toFixed(2) }}%</div>
 
         <!-- Critical Damage -->
-        <div class="grid-label">暴擊傷害</div>
+        <div class="grid-label">暴擊傷害<br></div>
         <div><input type="number" v-model.number="currentStats.criticalDamage"></div>
         <div><input type="number" v-model.number="expectedStats.criticalDamage"></div>
         <div><input type="number" v-model.number="additionalStats.criticalDamage"></div>
@@ -46,7 +46,7 @@
         <div class="grid-label-result"></div>
         <div class="grid-result-percent">{{ (calculateCriticalDamage(currentStats.criticalDamage) + (currentStats.additionalCriticalDamage || 0)).toFixed(2) }}%</div>
         <div class="grid-result-percent">{{ (calculateCriticalDamage(expectedStats.criticalDamage) + (expectedStats.additionalCriticalDamage || 0)).toFixed(2) }}%</div>
-        <div></div>
+        <div class="grid-result-percent">{{ (calculateCriticalDamage(currentStats.criticalDamage + additionalStats.criticalDamage) + (currentStats.additionalCriticalDamage || 0) + additionalStats.additionalCriticalDamage).toFixed(2) }}%</div>
 
         <!-- Accuracy -->
         <div class="grid-label">命中</div>
@@ -68,7 +68,7 @@
         <div class="grid-label-result"></div>
         <div class="grid-result-percent">{{ calculatePiercing(currentStats.piercing).toFixed(2) }}%</div>
         <div class="grid-result-percent">{{ calculatePiercing(expectedStats.piercing).toFixed(2) }}%</div>
-        <div></div>
+        <div class="grid-result-percent">{{ calculatePiercing(currentStats.piercing + additionalStats.piercing).toFixed(2) }}%</div>
 
         <!-- Additional Critical Rate -->
         <div class="grid-label">額外暴擊率(%)</div>
@@ -86,17 +86,21 @@
         <div class="placeholder"></div>
         <div class="placeholder"></div>
         <div></div>
-        <!-- Damage Change for Additional Stats -->
-        <div class="grid-label"></div>
-        <div></div>
-        <div></div>
-        <div class="grid-result-final">{{ additionalDamageChange.toFixed(2) }}%</div>
-
         <!-- Damage Multiplier -->
         <div class="grid-label">傷害倍率</div>
         <div class="grid-result-final">{{ currentDamageMultiplier.toFixed(2) }}</div>
         <div class="grid-result-final">{{ expectedDamageMultiplier.toFixed(2) }}</div>
         <div class="grid-result-final">{{ additionalDamageMultiplier.toFixed(2) }}</div>
+
+        <!-- Damage Change -->
+        <div class="grid-label">
+          傷害變化
+          <br>
+          <span class="note-inline">此計算未考慮命中率</span>
+        </div>
+        <div></div> <!-- Empty for current stats -->
+        <div class="grid-result-final">{{ damageChange.toFixed(2) }}%</div>
+        <div class="grid-result-final">{{ additionalDamageChange.toFixed(2) }}%</div>
       </div>
 
       <div class="extra-settings-container">
@@ -107,19 +111,11 @@
       </div>
     </div>
 
-    <div class="damage-change-section">
-      <div class="grid-label">預期傷害變化</div>
-      <div class="grid-result-final">{{ damageChange.toFixed(2) }}%</div>
-    </div>
-    <div class="note" style="text-align: center; margin-top: 10px;">
-      此計算未考慮命中率。
-    </div>
-
     <div class="increase-sections-container">
       <div class="crit-increase-section">
         <h4>基於當前屬性，暴擊提升會增加的傷害量</h4>
         <div class="crit-increase-grid">
-          <div class="grid-label">+100 暴擊</div>
+        <div class="grid-label">+100 暴擊</div>
           <div class="grid-result-final">{{ damageChangeCrit100.toFixed(2) }}%</div>
           <div class="grid-label">+200 暴擊</div>
           <div class="grid-result-final">{{ damageChangeCrit200.toFixed(2) }}%</div>
@@ -506,6 +502,12 @@ h3 {
   margin-top: 15px;
   font-size: 0.9em;
   color: #777;
+}
+
+.note-inline {
+  font-size: 0.5em;
+  color: #777;
+  font-weight: normal;
 }
 
 .increase-sections-container {
