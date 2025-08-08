@@ -33,8 +33,8 @@
         <div><input type="number" v-model.number="additionalStats.criticalRate"></div>
 
         <div class="grid-label-result"></div>
-        <div class="grid-result-percent">{{ (calculateCriticalRate(currentStats.criticalRate) + currentStats.additionalCriticalRate).toFixed(2) }}%</div>
-        <div class="grid-result-percent">{{ (calculateCriticalRate(expectedStats.criticalRate) + expectedStats.additionalCriticalRate).toFixed(2) }}%</div>
+        <div class="grid-result-percent">{{ (calculateCriticalRate(currentStats.criticalRate) + (currentStats.additionalCriticalRate || 0)).toFixed(2) }}%</div>
+        <div class="grid-result-percent">{{ (calculateCriticalRate(expectedStats.criticalRate) + (expectedStats.additionalCriticalRate || 0)).toFixed(2) }}%</div>
         <div></div>
 
         <!-- Critical Damage -->
@@ -44,8 +44,8 @@
         <div><input type="number" v-model.number="additionalStats.criticalDamage"></div>
         
         <div class="grid-label-result"></div>
-        <div class="grid-result-percent">{{ (calculateCriticalDamage(currentStats.criticalDamage) + currentStats.additionalCriticalDamage).toFixed(2) }}%</div>
-        <div class="grid-result-percent">{{ (calculateCriticalDamage(expectedStats.criticalDamage) + expectedStats.additionalCriticalDamage).toFixed(2) }}%</div>
+        <div class="grid-result-percent">{{ (calculateCriticalDamage(currentStats.criticalDamage) + (currentStats.additionalCriticalDamage || 0)).toFixed(2) }}%</div>
+        <div class="grid-result-percent">{{ (calculateCriticalDamage(expectedStats.criticalDamage) + (expectedStats.additionalCriticalDamage || 0)).toFixed(2) }}%</div>
         <div></div>
 
         <!-- Accuracy -->
@@ -196,13 +196,13 @@ export default {
   },
   computed: {
     additionalDamageChange() {
-      const currentCritRate = (this.calculateCriticalRate(this.currentStats.criticalRate) + this.currentStats.additionalCriticalRate) / 100;
-      const currentCritDamage = (this.calculateCriticalDamage(this.currentStats.criticalDamage) + this.currentStats.additionalCriticalDamage) / 100;
+      const currentCritRate = (this.calculateCriticalRate(this.currentStats.criticalRate) + (this.currentStats.additionalCriticalRate || 0)) / 100;
+      const currentCritDamage = (this.calculateCriticalDamage(this.currentStats.criticalDamage) + (this.currentStats.additionalCriticalDamage || 0)) / 100;
       const currentPiercing = this.calculatePiercing(this.currentStats.piercing) / 100;
 
       const expectedAttackPower = this.currentStats.attackPower + this.additionalStats.attackPower;
-      const expectedCritRate = (this.calculateCriticalRate(this.currentStats.criticalRate + this.additionalStats.criticalRate) + this.currentStats.additionalCriticalRate + this.additionalStats.additionalCriticalRate) / 100;
-      const expectedCritDamage = (this.calculateCriticalDamage(this.currentStats.criticalDamage + this.additionalStats.criticalDamage) + this.currentStats.additionalCriticalDamage + this.additionalStats.additionalCriticalDamage) / 100;
+      const expectedCritRate = (this.calculateCriticalRate(this.currentStats.criticalRate + this.additionalStats.criticalRate) + (this.currentStats.additionalCriticalRate || 0) + (this.additionalStats.additionalCriticalRate || 0)) / 100;
+      const expectedCritDamage = (this.calculateCriticalDamage(this.currentStats.criticalDamage + this.additionalStats.criticalDamage) + (this.currentStats.additionalCriticalDamage || 0) + (this.additionalStats.additionalCriticalDamage || 0)) / 100;
       const expectedPiercing = this.calculatePiercing(this.currentStats.piercing + this.additionalStats.piercing) / 100;
       
       const currentRemainingDefense = this.monsterDefensePoints * (1 - currentPiercing);
@@ -221,12 +221,12 @@ export default {
       return ((expectedDamageMultiplier / currentDamageMultiplier) - 1) * 100;
     },
     damageChange() {
-      const currentCritRate = (this.calculateCriticalRate(this.currentStats.criticalRate) + this.currentStats.additionalCriticalRate) / 100;
-      const currentCritDamage = (this.calculateCriticalDamage(this.currentStats.criticalDamage) + this.currentStats.additionalCriticalDamage) / 100;
+      const currentCritRate = (this.calculateCriticalRate(this.currentStats.criticalRate) + (this.currentStats.additionalCriticalRate || 0)) / 100;
+      const currentCritDamage = (this.calculateCriticalDamage(this.currentStats.criticalDamage) + (this.currentStats.additionalCriticalDamage || 0)) / 100;
       const currentPiercing = this.calculatePiercing(this.currentStats.piercing) / 100;
 
-      const expectedCritRate = (this.calculateCriticalRate(this.expectedStats.criticalRate) + this.expectedStats.additionalCriticalRate) / 100;
-      const expectedCritDamage = (this.calculateCriticalDamage(this.expectedStats.criticalDamage) + this.expectedStats.additionalCriticalDamage) / 100;
+      const expectedCritRate = (this.calculateCriticalRate(this.expectedStats.criticalRate) + (this.expectedStats.additionalCriticalRate || 0)) / 100;
+      const expectedCritDamage = (this.calculateCriticalDamage(this.expectedStats.criticalDamage) + (this.expectedStats.additionalCriticalDamage || 0)) / 100;
       const expectedPiercing = this.calculatePiercing(this.expectedStats.piercing) / 100;
 
       const currentRemainingDefense = this.monsterDefensePoints * (1 - currentPiercing);
