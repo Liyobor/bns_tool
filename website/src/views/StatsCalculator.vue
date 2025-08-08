@@ -91,6 +91,12 @@
         <div></div>
         <div></div>
         <div class="grid-result-final">{{ additionalDamageChange.toFixed(2) }}%</div>
+
+        <!-- Damage Multiplier -->
+        <div class="grid-label">傷害倍率</div>
+        <div class="grid-result-final">{{ currentDamageMultiplier.toFixed(2) }}</div>
+        <div class="grid-result-final">{{ expectedDamageMultiplier.toFixed(2) }}</div>
+        <div class="grid-result-final">{{ additionalDamageMultiplier.toFixed(2) }}</div>
       </div>
 
       <div class="extra-settings-container">
@@ -195,54 +201,43 @@ export default {
     }
   },
   computed: {
-    additionalDamageChange() {
+    currentDamageMultiplier() {
       const currentCritRate = (this.calculateCriticalRate(this.currentStats.criticalRate) + (this.currentStats.additionalCriticalRate || 0)) / 100;
       const currentCritDamage = (this.calculateCriticalDamage(this.currentStats.criticalDamage) + (this.currentStats.additionalCriticalDamage || 0)) / 100;
       const currentPiercing = this.calculatePiercing(this.currentStats.piercing) / 100;
-
+      const currentRemainingDefense = this.monsterDefensePoints * (1 - currentPiercing);
+      const currentMonsterReduction = this.calculateMonsterDamageReduction(currentRemainingDefense);
+      return (1 - currentCritRate + (currentCritRate * currentCritDamage)) * (1 - currentMonsterReduction) * this.currentStats.attackPower;
+    },
+    expectedDamageMultiplier() {
+      const expectedCritRate = (this.calculateCriticalRate(this.expectedStats.criticalRate) + (this.expectedStats.additionalCriticalRate || 0)) / 100;
+      const expectedCritDamage = (this.calculateCriticalDamage(this.expectedStats.criticalDamage) + (this.expectedStats.additionalCriticalDamage || 0)) / 100;
+      const expectedPiercing = this.calculatePiercing(this.expectedStats.piercing) / 100;
+      const expectedRemainingDefense = this.monsterDefensePoints * (1 - expectedPiercing);
+      const expectedMonsterReduction = this.calculateMonsterDamageReduction(expectedRemainingDefense);
+      return (1 - expectedCritRate + (expectedCritRate * expectedCritDamage)) * (1 - expectedMonsterReduction) * this.expectedStats.attackPower;
+    },
+    additionalDamageMultiplier() {
       const expectedAttackPower = this.currentStats.attackPower + this.additionalStats.attackPower;
       const expectedCritRate = (this.calculateCriticalRate(this.currentStats.criticalRate + this.additionalStats.criticalRate) + (this.currentStats.additionalCriticalRate || 0) + (this.additionalStats.additionalCriticalRate || 0)) / 100;
       const expectedCritDamage = (this.calculateCriticalDamage(this.currentStats.criticalDamage + this.additionalStats.criticalDamage) + (this.currentStats.additionalCriticalDamage || 0) + (this.additionalStats.additionalCriticalDamage || 0)) / 100;
       const expectedPiercing = this.calculatePiercing(this.currentStats.piercing + this.additionalStats.piercing) / 100;
-      
-      const currentRemainingDefense = this.monsterDefensePoints * (1 - currentPiercing);
-      const currentMonsterReduction = this.calculateMonsterDamageReduction(currentRemainingDefense);
-
       const expectedRemainingDefense = this.monsterDefensePoints * (1 - expectedPiercing);
       const expectedMonsterReduction = this.calculateMonsterDamageReduction(expectedRemainingDefense);
 
-      const currentDamageMultiplier = (1 - currentCritRate + (currentCritRate * currentCritDamage)) * (1 - currentMonsterReduction) * this.currentStats.attackPower;
-      const expectedDamageMultiplier = (1 - expectedCritRate + (expectedCritRate * expectedCritDamage)) * (1 - expectedMonsterReduction) * expectedAttackPower;
-
-      if (currentDamageMultiplier === 0) {
+      return (1 - expectedCritRate + (expectedCritRate * expectedCritDamage)) * (1 - expectedMonsterReduction) * expectedAttackPower;
+    },
+    additionalDamageChange() {
+      if (this.currentDamageMultiplier === 0) {
         return 0;
       }
-
-      return ((expectedDamageMultiplier / currentDamageMultiplier) - 1) * 100;
+      return ((this.additionalDamageMultiplier / this.currentDamageMultiplier) - 1) * 100;
     },
     damageChange() {
-      const currentCritRate = (this.calculateCriticalRate(this.currentStats.criticalRate) + (this.currentStats.additionalCriticalRate || 0)) / 100;
-      const currentCritDamage = (this.calculateCriticalDamage(this.currentStats.criticalDamage) + (this.currentStats.additionalCriticalDamage || 0)) / 100;
-      const currentPiercing = this.calculatePiercing(this.currentStats.piercing) / 100;
-
-      const expectedCritRate = (this.calculateCriticalRate(this.expectedStats.criticalRate) + (this.expectedStats.additionalCriticalRate || 0)) / 100;
-      const expectedCritDamage = (this.calculateCriticalDamage(this.expectedStats.criticalDamage) + (this.expectedStats.additionalCriticalDamage || 0)) / 100;
-      const expectedPiercing = this.calculatePiercing(this.expectedStats.piercing) / 100;
-
-      const currentRemainingDefense = this.monsterDefensePoints * (1 - currentPiercing);
-      const currentMonsterReduction = this.calculateMonsterDamageReduction(currentRemainingDefense);
-      
-      const expectedRemainingDefense = this.monsterDefensePoints * (1 - expectedPiercing);
-      const expectedMonsterReduction = this.calculateMonsterDamageReduction(expectedRemainingDefense);
-
-      const currentDamageMultiplier = (1 - currentCritRate + (currentCritRate * currentCritDamage)) * (1 - currentMonsterReduction) * this.currentStats.attackPower;
-      const expectedDamageMultiplier = (1 - expectedCritRate + (expectedCritRate * expectedCritDamage)) * (1 - expectedMonsterReduction) * this.expectedStats.attackPower;
-
-      if (currentDamageMultiplier === 0) {
+      if (this.currentDamageMultiplier === 0) {
         return 0;
       }
-
-      return ((expectedDamageMultiplier / currentDamageMultiplier) - 1) * 100;
+      return ((this.expectedDamageMultiplier / this.currentDamageMultiplier) - 1) * 100;
     },
     damageChangeCrit100() {
       return this.calculateCritIncrease(100);
