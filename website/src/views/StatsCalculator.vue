@@ -7,7 +7,11 @@
     </div>
 
     <div class="level-info">
-      <strong>適用等級:</strong> 60
+      <strong>適用等級:</strong>
+      <select v-model.number="level">
+        <option value="60">60</option>
+        <option value="61">61</option>
+      </select>
     </div>
 
     <div class="main-content">
@@ -149,12 +153,12 @@
       </div>
     </div>
     <div class="description-section">
-      <!-- <h3>計算公式與說明</h3> -->
+      <h3>計算公式與說明 (等級 {{ level }})</h3>
       <ul>
-        <li><strong>暴擊率 (%):</strong> ((0.9968* 100 * 數值) / (8922.5043 + 數值)) + 1</li>
-        <li><strong>暴擊傷害 (%):</strong> (((2.8969 * 數值) / (8377.3824 + 數值)) + 1.25) * 100</li>
-        <li><strong>命中率 (%):</strong> ((95.5467 * 數值) / (6294.5977 + 數值)) / 100 + 0.85</li>
-        <li><strong>貫穿率 (%):</strong> (0.942788 * 數值) / (10665.5022 + 數值) * 100</li>
+        <li><strong>暴擊率 (%):</strong> (( {{ formulas.criticalRate.a.toFixed(4) }} * 100 * 數值) / ( {{ formulas.criticalRate.b.toFixed(4) }} + 數值)) + 1</li>
+        <li><strong>暴擊傷害 (%):</strong> ((( {{ formulas.criticalDamage.a.toFixed(4) }} * 數值) / ( {{ formulas.criticalDamage.b.toFixed(4) }} + 數值)) + 1.25) * 100</li>
+        <li><strong>命中率 (%):</strong> (((({{ formulas.accuracy.a.toFixed(4) }} * 數值) / ({{ formulas.accuracy.b.toFixed(4) }} + 數值)) / 100) + 0.85) * 100</li>
+        <li><strong>貫穿率 (%):</strong> ({{ formulas.piercing.a.toFixed(4) }} * 數值) / ({{ formulas.piercing.b.toFixed(4) }} + 數值) * 100</li>
       </ul>
       <p class="note">某些屬性會因為自身與怪物的等級差距而產生變化。</p>
     </div>
@@ -162,11 +166,29 @@
 </template>
 
 <script>
+const levelFormulas = {
+  60: {
+    criticalRate: { a: 0.9968, b: 8922.5043 },
+    criticalDamage: { a: 2.8969, b: 8377.3824 },
+    accuracy: { a: 95.5467, b: 6294.5977 },
+    piercing: { a: 0.942788, b: 10665.5022 },
+    monsterDamageReduction: { a: 0.942788, b: 10665.5022 }
+  },
+  61: {
+    criticalRate: { a: 0.997082046, b: 9693.96969078 },
+    criticalDamage: { a: 2.906465950, b: 7570.32616045 },
+    accuracy: { a: 95.847128372, b: 6885.57322650 },
+    piercing: { a: 0.942478491, b: 11580.76553879 },
+    monsterDamageReduction: { a: 0.942478491, b: 11580.76553879 }
+  }
+};
+
 export default {
   name: 'StatsCalculator',
   data() {
     const savedData = JSON.parse(localStorage.getItem('statsCalculatorData'));
     return {
+      level: savedData?.level || 60,
       currentStats: savedData?.currentStats || {
         attackPower: 0,
         criticalRate: 0,
@@ -197,6 +219,9 @@ export default {
     }
   },
   computed: {
+    formulas() {
+      return levelFormulas[this.level] || levelFormulas[60];
+    },
     currentDamageMultiplier() {
       const currentCritRate = (this.calculateCriticalRate(this.currentStats.criticalRate) + (this.currentStats.additionalCriticalRate || 0)) / 100;
       const currentCritDamage = (this.calculateCriticalDamage(this.currentStats.criticalDamage) + (this.currentStats.additionalCriticalDamage || 0)) / 100;
@@ -264,6 +289,9 @@ export default {
     }
   },
   watch: {
+    level() {
+      this.saveData();
+    },
     currentStats: {
       handler() { this.saveData(); },
       deep: true
@@ -279,6 +307,7 @@ export default {
   methods: {
     saveData() {
       const data = {
+        level: this.level,
         currentStats: this.currentStats,
         expectedStats: this.expectedStats,
         monsterDefensePoints: this.monsterDefensePoints
@@ -347,27 +376,28 @@ export default {
     },
     calculateMonsterDamageReduction(points) {
       if (points <= 0) return 0;
-      return (0.942788 * points) / (10665.5022 + points);
+      const { a, b } = this.formulas.monsterDamageReduction;
+      return (a * points) / (b + points);
     },
     calculateCriticalRate(points) {
       if (points <= 0) return 1;
-      // level 60
-      return ((0.9968 * 100 * points) / (8922.5043 + points)) + 1;
+      const { a, b } = this.formulas.criticalRate;
+      return ((a * 100 * points) / (b + points)) + 1;
     },
     calculateCriticalDamage(points) {
       if (points <= 0) return 125;
-      // level 60
-      return (((2.8969 * points) / (8377.3824 + points)) + 1.25) * 100;
+      const { a, b } = this.formulas.criticalDamage;
+      return (((a * points) / (b + points)) + 1.25) * 100;
     },
     calculateAccuracy(points) {
       if (points <= 0) return 85;
-      // level 60
-      return (((95.5467 * points) / (6294.5977 + points)) / 100 + 0.85) * 100;
+      const { a, b } = this.formulas.accuracy;
+      return (((a * points) / (b + points)) / 100 + 0.85) * 100;
     },
     calculatePiercing(points) {
       if (points <= 0) return 0;
-      // level 60
-      return (0.942788 * points) / (10665.5022 + points) * 100;
+      const { a, b } = this.formulas.piercing;
+      return (a * points) / (b + points) * 100;
     }
   }
 }
