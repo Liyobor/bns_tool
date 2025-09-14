@@ -11,6 +11,7 @@
       <select v-model.number="level">
         <option value="60">60</option>
         <option value="61">61</option>
+        <option value="62">62</option>
       </select>
     </div>
 
@@ -155,7 +156,7 @@
     <div class="description-section">
       <h3>計算公式與說明 (等級 {{ level }})</h3>
       <ul>
-        <li><strong>暴擊率 (%):</strong> (( {{ formulas.criticalRate.a.toFixed(4) }} * 100 * 數值) / ( {{ formulas.criticalRate.b.toFixed(4) }} + 數值)) + 1</li>
+        <li><strong>暴擊率 (%):</strong> (( {{ formulas.criticalRate.a.toFixed(4) }} * 100 * 數值) / ( {{ formulas.criticalRate.b.toFixed(4) }} + 數值)) + {{ formulas.criticalRate.c }}</li>
         <li><strong>暴擊傷害 (%):</strong> ((( {{ formulas.criticalDamage.a.toFixed(4) }} * 數值) / ( {{ formulas.criticalDamage.b.toFixed(4) }} + 數值)) + 1.25) * 100</li>
         <li><strong>命中率 (%):</strong> (((({{ formulas.accuracy.a.toFixed(4) }} * 數值) / ({{ formulas.accuracy.b.toFixed(4) }} + 數值)) / 100) + 0.85) * 100</li>
         <li><strong>貫穿率 (%):</strong> ({{ formulas.piercing.a.toFixed(4) }} * 數值) / ({{ formulas.piercing.b.toFixed(4) }} + 數值) * 100</li>
@@ -168,18 +169,25 @@
 <script>
 const levelFormulas = {
   60: {
-    criticalRate: { a: 0.9968, b: 8922.5043 },
+    criticalRate: { a: 0.9968, b: 8922.5043 , c : 1 },
     criticalDamage: { a: 2.8969, b: 8377.3824 },
     accuracy: { a: 95.5467, b: 6294.5977 },
     piercing: { a: 0.942788, b: 10665.5022 },
     monsterDamageReduction: { a: 0.942788, b: 10665.5022 }
   },
   61: {
-    criticalRate: { a: 0.997082046, b: 9693.96969078 },
+    criticalRate: { a: 0.997082046, b: 9693.96969078 , c : 1},
     criticalDamage: { a: 2.906465950, b: 7570.32616045 },
     accuracy: { a: 95.847128372, b: 6885.57322650 },
     piercing: { a: 0.942478491, b: 11580.76553879 },
     monsterDamageReduction: { a: 0.942478491, b: 11580.76553879 }
+  },
+  62: {
+    criticalRate: { a: 0.9703, b: 9653.87 , c : -0.00726},
+    criticalDamage: { a: 2.897642, b: 7932.785763 },
+    accuracy: { a: 95.233848, b: 7434.701142 },
+    piercing: { a: 0.948398, b: 12682.003542 },
+    monsterDamageReduction: { a: 0.948398, b: 12682.003542 }
   }
 };
 
@@ -381,8 +389,8 @@ export default {
     },
     calculateCriticalRate(points) {
       if (points <= 0) return 1;
-      const { a, b } = this.formulas.criticalRate;
-      return ((a * 100 * points) / (b + points)) + 1;
+      const { a, b,c } = this.formulas.criticalRate;
+      return ((a * 100 * points) / (b + points)) + c;
     },
     calculateCriticalDamage(points) {
       if (points <= 0) return 125;
