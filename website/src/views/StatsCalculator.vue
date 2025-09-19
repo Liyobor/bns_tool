@@ -12,6 +12,7 @@
         <option value="60">60</option>
         <option value="61">61</option>
         <option value="62">62</option>
+        <option value="63">63</option>
       </select>
     </div>
 
@@ -169,14 +170,14 @@
 <script>
 const levelFormulas = {
   60: {
-    criticalRate: { a: 0.9968, b: 8922.5043 , c : 1 },
+    criticalRate: { a: 0.9707, b: 8215.300 , c : 0.070631 },
     criticalDamage: { a: 2.8969, b: 8377.3824 },
     accuracy: { a: 95.5467, b: 6294.5977 },
     piercing: { a: 0.942788, b: 10665.5022 },
     monsterDamageReduction: { a: 0.942788, b: 10665.5022 }
   },
   61: {
-    criticalRate: { a: 0.997082046, b: 9693.96969078 , c : 1},
+    criticalRate: { a: 0.963106, b: 8646.72 , c : -0.358622},
     criticalDamage: { a: 2.906465950, b: 7570.32616045 },
     accuracy: { a: 95.847128372, b: 6885.57322650 },
     piercing: { a: 0.942478491, b: 11580.76553879 },
@@ -188,6 +189,13 @@ const levelFormulas = {
     accuracy: { a: 95.233848, b: 7434.701142 },
     piercing: { a: 0.948398, b: 12682.003542 },
     monsterDamageReduction: { a: 0.948398, b: 12682.003542 }
+  },
+  63: {
+    criticalRate: { a: 0.9675, b: 10429.5, c: -0.0309 },
+    criticalDamage: { a: 2.9094, b: 8400.7, c: 1.25 },
+    accuracy: { a: 95.6970, b: 8163.1451, c: 0.8503 },
+    piercing: { a: 0.9475, b: 13755.0 },
+    monsterDamageReduction: { a: 0.9475, b: 13755.0 }
   }
 };
 
@@ -394,13 +402,15 @@ export default {
     },
     calculateCriticalDamage(points) {
       if (points <= 0) return 125;
-      const { a, b } = this.formulas.criticalDamage;
-      return (((a * points) / (b + points)) + 1.25) * 100;
+      const { a, b, c } = this.formulas.criticalDamage;
+      const base = (typeof c === 'number') ? c : 1.25;
+      return (((a * points) / (b + points)) + base) * 100;
     },
     calculateAccuracy(points) {
       if (points <= 0) return 85;
-      const { a, b } = this.formulas.accuracy;
-      return (((a * points) / (b + points)) / 100 + 0.85) * 100;
+      const { a, b, c } = this.formulas.accuracy;
+      const base = (typeof c === 'number') ? c : 0.85;
+      return (((a * points) / (b + points)) / 100 + base) * 100;
     },
     calculatePiercing(points) {
       if (points <= 0) return 0;
